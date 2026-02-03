@@ -717,9 +717,10 @@ section.section-revealed {
 
 /* Tech Scroll Animation */
 .tech-scroll-wrapper {
-    overflow: hidden;
+    overflow: visible;
     margin: 60px 0;
     position: relative;
+    padding: 20px 0;
 }
 
 .tech-scroll-track {
@@ -767,7 +768,7 @@ section.section-revealed {
 .tech-logo-card i {
     color: var(--primary-orange);
     transition: color 0.3s ease;
-    font-size: 48px;
+    font-size: 48px !important;
     filter: drop-shadow(0 2px 8px rgba(255, 111, 0, 0.2));
 }
 
