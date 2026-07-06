@@ -56,7 +56,19 @@ header.scrolled{border-color:var(--line);box-shadow:0 1px 20px rgba(27,18,34,.04
 .nav-links a{color:var(--body);transition:color .2s}
 .nav-links a:hover{color:var(--ink)}
 .nav-links .btn-primary{color:#fff}
-.menu-btn{display:none;background:none;border:none;color:var(--ink);font-weight:600;cursor:pointer;font-size:15px}
+.menu-btn{display:none;background:none;border:none;cursor:pointer;padding:8px;width:46px;height:46px;position:relative;z-index:120}
+.menu-btn span{display:block;width:24px;height:2px;background:var(--ink);margin:5px auto;border-radius:2px;transition:transform .3s,opacity .25s}
+.menu-btn.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.menu-btn.active span:nth-child(2){opacity:0}
+.menu-btn.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-nav{position:fixed;inset:0;z-index:110;background:#fff;display:flex;flex-direction:column;padding:110px 26px 40px;transform:translateX(100%);transition:transform .34s cubic-bezier(.4,0,.2,1);visibility:hidden}
+.mobile-nav.open{transform:none;visibility:visible}
+.mobile-nav a.mlink{font-family:var(--display);font-weight:700;font-size:25px;color:var(--ink);padding:19px 4px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;transition:color .2s}
+.mobile-nav a.mlink:active{color:var(--orange)}
+.mobile-nav a.mlink svg{width:19px;height:19px;color:var(--muted)}
+.mobile-nav .btn-primary{margin-top:30px;text-align:center;padding:18px;font-size:16px;border-radius:10px}
+.mobile-nav .m-tagline{margin-top:auto;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+@media(min-width:641px){.mobile-nav{display:none!important}}
 
 /* hero */
 .hero{padding:92px 0 84px;position:relative;overflow:hidden}
@@ -231,7 +243,7 @@ footer .tagline{font-size:12.5px;font-weight:600;letter-spacing:.14em;text-trans
 .foot-bottom{margin-top:44px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--muted)}
 
 /* contact modal */
-.modal-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(20,13,24,.55);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .28s ease,visibility .28s}
+.modal-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(20,13,24,.55);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .28s ease,visibility .28s}
 .modal-overlay.open{opacity:1;visibility:visible}
 .modal{background:#fff;border-radius:20px;max-width:460px;width:100%;padding:38px 36px 34px;position:relative;box-shadow:0 40px 90px -30px rgba(27,18,34,.5);transform:translateY(14px) scale(.98);opacity:0;transition:transform .3s cubic-bezier(.2,.8,.3,1),opacity .3s}
 .modal-overlay.open .modal{transform:none;opacity:1}
@@ -284,14 +296,28 @@ footer .tagline{font-size:12.5px;font-weight:600;letter-spacing:.14em;text-trans
 }
 @media(max-width:640px){
   .wrap{padding:0 20px}.nav-links{display:none}.menu-btn{display:block}
-  section.blk{padding:70px 0}
+  .nav{height:78px}
+  .brand img{height:40px}.brand .wordmark{font-size:22px}.brand{gap:10px}
+  section.blk{padding:60px 0}
+  .hero{padding:52px 0 56px}
+  .hero h1{font-size:33px;line-height:1.08}
+  .hero .sub{font-size:18px}
+  .hero p.lede{font-size:16px;line-height:1.6}
+  .hero-metrics{margin-top:38px}
+  .head h2{font-size:27px}.head{margin-bottom:32px}
+  .trust-inner{grid-template-columns:1fr}
+  .trust-cell{border-left:none;border-top:1px solid var(--line);padding:24px 4px}
+  .trust-cell:first-child{border-top:none}
   .svc-grid,.why-grid,.rail-steps{grid-template-columns:1fr}
   .hero-metrics{grid-template-columns:1fr}
-  .hm{border-left:none!important;padding-left:0}
+  .hm{border-left:none!important;padding:20px 0}
   .hm+.hm{border-top:1px solid var(--line)}
   .scope-chips{grid-template-columns:1fr}
-  .cta-inner{padding:52px 26px}.case-panel{padding:32px}
-  .hero-cta .btn{flex:1;text-align:center}
+  .case-full{padding:28px 22px}
+  .cta-inner{padding:48px 24px}.case-panel{padding:32px}
+  .hero-cta{gap:12px}.hero-cta .btn{flex:1;text-align:center;padding:16px}
+  .founder .qmark{font-size:72px}
+  .team-tags span{font-size:13px}
 }
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
@@ -311,9 +337,19 @@ footer .tagline{font-size:12.5px;font-weight:600;letter-spacing:.14em;text-trans
       <a href="#founder">About</a>
       <a href="#contact" class="btn btn-primary js-book">Book a Consultation</a>
     </nav>
-    <button class="menu-btn" onclick="document.querySelector('.nav-links').style.display='flex'">Menu</button>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </header>
+
+<!-- MOBILE OVERLAY MENU -->
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile">
+  <a class="mlink" href="#services">Services <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></a>
+  <a class="mlink" href="#work">Work <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></a>
+  <a class="mlink" href="#process">How We Work <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></a>
+  <a class="mlink" href="#founder">About <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></a>
+  <a href="#contact" class="btn btn-primary js-book">Book a Consultation</a>
+  <div class="m-tagline">AI · Cloud · Product Engineering</div>
+</nav>
 
 <main id="top">
 
@@ -564,6 +600,23 @@ document.querySelectorAll('.js-book').forEach(b=>b.addEventListener('click',open
 document.getElementById('modalClose').addEventListener('click',closeModal);
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
 addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeModal()});
+
+// mobile overlay menu
+const menuBtn=document.getElementById('menuBtn'),mobileNav=document.getElementById('mobileNav');
+function toggleMenu(force){
+  const open=force!==undefined?force:!mobileNav.classList.contains('open');
+  mobileNav.classList.toggle('open',open);
+  menuBtn.classList.toggle('active',open);
+  menuBtn.setAttribute('aria-expanded',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+menuBtn.addEventListener('click',()=>toggleMenu());
+mobileNav.querySelectorAll('.mlink').forEach(a=>a.addEventListener('click',()=>toggleMenu(false)));
+// CTA inside menu: close the panel visually; the modal handler manages scroll lock
+const mCta=mobileNav.querySelector('.js-book');
+if(mCta)mCta.addEventListener('click',()=>{mobileNav.classList.remove('open');menuBtn.classList.remove('active');menuBtn.setAttribute('aria-expanded','false')});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&mobileNav.classList.contains('open'))toggleMenu(false)});
+addEventListener('resize',()=>{if(innerWidth>640&&mobileNav.classList.contains('open'))toggleMenu(false)});
 </script>
 </body>
 </html>
